@@ -94,10 +94,6 @@ module "eks" {
     disk_size = 50
   }
 
-  workers_group_defaults = {
-    ami_id = "ami-00b8b0753e596522c"
-  }
-
   worker_groups = [
     {
       name                    = "core"
@@ -108,7 +104,7 @@ module "eks" {
       subnets                 = [module.vpc.private_subnets[0]]
 
       # Use this to set labels / taints
-      kubelet_extra_args      = "--node-labels=node-role.kubernetes.io/core=core,hub.jupyter.org/node-purpose=core"
+      kubelet_extra_args      = "--node-labels=role=core,hub.jupyter.org/node-purpose=core"
       
       tags = [
         {
@@ -128,14 +124,14 @@ module "eks" {
   worker_groups_launch_template = [
     {
       name                    = "user-spot"
-      override_instance_types = ["m5.2xlarge", "m4.2xlarge"]
-      spot_instance_pools     = 2
+      override_instance_types = ["m5.2xlarge", "m4.2xlarge", "m5a.2xlarge"]
+      spot_instance_pools     = 3
       asg_max_size            = 100
       asg_min_size            = 0
       asg_desired_capacity    = 0
 
       # Use this to set labels / taints
-      kubelet_extra_args = "--node-labels=node-role.kubernetes.io/user=user,hub.jupyter.org/node-purpose=user --register-with-taints hub.jupyter.org/dedicated=user:NoSchedule"
+      kubelet_extra_args = "--node-labels=role=user,hub.jupyter.org/node-purpose=user --register-with-taints hub.jupyter.org/dedicated=user:NoSchedule"
 
       tags = [
         {
@@ -169,7 +165,7 @@ module "eks" {
       asg_desired_capacity    = 0
 
       # Use this to set labels / taints
-      kubelet_extra_args = "--node-labels node-role.kubernetes.io/worker=worker,k8s.dask.org/node-purpose=worker --register-with-taints k8s.dask.org/dedicated=worker:NoSchedule"
+      kubelet_extra_args = "--node-labels role=worker,k8s.dask.org/node-purpose=worker --register-with-taints k8s.dask.org/dedicated=worker:NoSchedule"
 
       tags = [
         {
