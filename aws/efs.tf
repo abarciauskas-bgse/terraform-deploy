@@ -83,7 +83,7 @@ resource "helm_release" "efs-provisioner" {
 
 resource "kubernetes_persistent_volume" "shared-efs-volume" {
   metadata {
-    name = "icesat2-staging-shared-nfs"
+    name = "pangeo-staging-shared-nfs"
   }
 
   spec {
@@ -94,7 +94,7 @@ resource "kubernetes_persistent_volume" "shared-efs-volume" {
     persistent_volume_source {
       nfs {
         server = aws_efs_file_system.home_dirs.dns_name
-        path = "/icesat-2.hackweek.io/shared/"
+        path = "/pangeo/shared/"
       }
     }
     storage_class_name = "manual-sc"
@@ -123,7 +123,7 @@ resource "kubernetes_persistent_volume_claim" "shared-efs-claim" {
 
 resource "kubernetes_persistent_volume" "shared-efs-volume-prod" {
   metadata {
-    name = "icesat2-prod-shared-nfs"
+    name = "pangeo-prod-shared-nfs"
   }
 
   spec {
@@ -134,7 +134,7 @@ resource "kubernetes_persistent_volume" "shared-efs-volume-prod" {
     persistent_volume_source {
       nfs {
         server = aws_efs_file_system.home_dirs.dns_name
-        path = "/icesat-2.hackweek.io/shared/"
+        path = "/pangeo/shared/"
       }
     }
     storage_class_name = "manual-sc"
@@ -163,7 +163,7 @@ resource "kubernetes_persistent_volume_claim" "shared-efs-claim-prod" {
 
 resource "kubernetes_persistent_volume" "tutorial-data-volume" {
   metadata {
-    name = "icesat2-tutorial-data-volume"
+    name = "pangeo-tutorial-data-volume"
   }
 
   spec {
@@ -175,7 +175,7 @@ resource "kubernetes_persistent_volume" "tutorial-data-volume" {
     persistent_volume_source {
       nfs {
         server = aws_efs_file_system.home_dirs.dns_name
-        path = "/icesat-2.hackweek.io/tutorial-data/"
+        path = "/pangeo/tutorial-data/"
         read_only = true
       }
     }
@@ -185,7 +185,7 @@ resource "kubernetes_persistent_volume" "tutorial-data-volume" {
 
 resource "kubernetes_persistent_volume_claim" "tutorial-data-claim" {
   metadata {
-    name = "icesat2-tutorial-data-claim"
+    name = "pangeo-tutorial-data-claim"
     namespace = "hackweek-hub-prod"
   }
 

@@ -2,9 +2,9 @@ terraform {
   required_version = ">= 0.12.6"
 
   backend "s3" {
-    bucket         = "hackweek-terraform-state-bucket"
-    key            = "hackweek-cluster-config.tfstate"
-    region         = "us-west-2"
+    bucket         = "aimee-pangeo-terraform-state"
+    key            = "aimee-pangeo-cluster-config.tfstate"
+    region         = "us-east-1"
     encrypt        = true
   }
 }
@@ -59,6 +59,7 @@ module "vpc" {
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
     Owner = split("/", data.aws_caller_identity.current.arn)[1]
     AutoTag_Creator = data.aws_caller_identity.current.arn
+    Project = "eodc"
   }
 
   public_subnet_tags = {
@@ -87,6 +88,7 @@ module "eks" {
   tags = {
     Owner = split("/", data.aws_caller_identity.current.arn)[1]
     AutoTag_Creator = data.aws_caller_identity.current.arn
+    Project = "eodc"
   }
 
   node_groups_defaults = {
@@ -120,6 +122,11 @@ module "eks" {
           "key"                 = "k8s.io/cluster-autoscaler/${var.cluster_name}"
           "propagate_at_launch" = "false"
           "value"               = "true"
+        },
+        {
+          "key"                 = "Project"
+          "propagate_at_launch" = "false"
+          "value"               = "eodc"
         }
       ]
     }
@@ -157,6 +164,11 @@ module "eks" {
           "key"                 = "k8s.io/cluster-autoscaler/${var.cluster_name}"
           "propagate_at_launch" = "false"
           "value"               = "true"
+        },
+        {
+          "key"                 = "Project"
+          "propagate_at_launch" = "false"
+          "value"               = "eodc"
         }
       ]
     },
